@@ -1,7 +1,7 @@
 var img;
 var clr=null;
 var myColorPicker;
-var dropzone;
+var canvas;
 
 function preload() {
   img = loadImage("assets/woman_in_red.jpg");
@@ -39,8 +39,8 @@ function hexToRgb(hex) {
 }
 
 function setup() {
-  // Don't put this in setup because by the time setup is reached it's already loaded
-  //window.addEventListener("load",function(){
+  canvas = createCanvas(img.width, img.height*2);
+
   myColorPicker = document.getElementById('colorPicker');
 
   myColorPicker.addEventListener("change",function(){
@@ -49,7 +49,7 @@ function setup() {
     console.log(clr[0]);
     show_image();
     })
-  //})
+
   myColorPicker2 = document.getElementById('colorPicker2');
   myColorPicker2.addEventListener("change",function(){
     console.log("2");
@@ -83,11 +83,7 @@ function setup() {
     show_image();
     })
 
-  // dropzone = document.getElementById('dropzone');
-  dropzone = select('#dropzone');
-  dropzone.dragOver(highlight);
-  dropzone.dragLeave(unhighlight);
-  dropzone.drop(gotFile);
+  canvas.drop(gotFile);
 
   noLoop();
 
@@ -110,7 +106,7 @@ function setup() {
 
 function gotFile(file) {
   // debugger;
-  unhighlight();
+  
   if (file.type === 'image') {
     // Create an image DOM element but don't show it
     img =  createImg(file.data, "test", processFile).hide();
@@ -127,14 +123,6 @@ function processFile() {
   show_image();
 }
 
-function highlight(){
-  dropzone.style('background-color', '#ccc');
-}
-
-function unhighlight(){
-  dropzone.style('background-color', '#fff');
-}
-
 // function display_image(){
 //   console.log(img.width, img.height);
 //   image(img, 0, 0);
@@ -142,10 +130,9 @@ function unhighlight(){
 // }
 
 function show_image(){
-
   console.log(img.width, img.height);
 
-  createCanvas(img.width, img.height*2);
+  canvas = createCanvas(img.width, img.height*2);
   imageMode(CORNER);
   pixelDensity(1);
   background(255);

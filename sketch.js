@@ -2,6 +2,8 @@ var img;
 var clr=null;
 var myColorPicker;
 var canvas;
+var filename;
+var file_extension;
 
 function preload() {
   img = loadImage("assets/woman_in_red.jpg");
@@ -87,11 +89,11 @@ function setup() {
 
   noLoop();
 
-  var a = [205, 167, 20];
-  var b = [77, 86, 59];
-  var c = [42, 106, 105];
-  var d = [165, 89, 20];
-  var e = [146, 150, 127];
+  var a = [29, 32, 33];
+  var b = [110, 99, 98];
+  var c = [127, 183, 190];
+  var d = [241, 3, 106];
+  var e = [245, 249, 233];
 
   clr = [
     a,
@@ -106,13 +108,12 @@ function setup() {
 
 function gotFile(file) {
   // debugger;
-  
   if (file.type === 'image') {
+    filename = file.name;
+    file_extension = file.subtype;
+    console.log(filename);
     // Create an image DOM element but don't show it
     img =  createImg(file.data, "test", processFile).hide();
-    // img = createImg(file.data, "test", processFile)
-    // Draw the image onto the canvas
-
   } else {
     console.log('Not an image file!');
   }
@@ -123,12 +124,6 @@ function processFile() {
   show_image();
 }
 
-// function display_image(){
-//   console.log(img.width, img.height);
-//   image(img, 0, 0);
-//   console.log(img.width, img.height);
-// }
-
 function show_image(){
   console.log(img.width, img.height);
 
@@ -137,33 +132,25 @@ function show_image(){
   pixelDensity(1);
   background(255);
   image(img, 0, 0);
-  // img.loadPixels();
-  image(img, 0, 0);
 
   loadPixels();
 
   print(img.height*img.width);
   var offset = +img.height*img.width*4;
 
-    for (var y = 0; y < img.height; y++) {
-      // print(y);
-      for (var x = 0; x < img.width; x++) {
-        var index = (x + y * width)*4;
-        var i = get_min_distance(pixels[index+0], pixels[index+1], pixels[index+2]);
-        //
-        // // print("hi" , i);
-        pixels[offset+index+0] = clr[i][0];
-        pixels[offset+index+1] = clr[i][1];
-        pixels[offset+index+2] = clr[i][2];
-        pixels[offset+index+3] = 255;
-      }
+  for (var y = 0; y < img.height; y++) {
+    for (var x = 0; x < img.width; x++) {
+      var index = (x + y * width)*4;
+      var i = get_min_distance(pixels[index+0], pixels[index+1], pixels[index+2]);
+      pixels[offset+index+0] = clr[i][0];
+      pixels[offset+index+1] = clr[i][1];
+      pixels[offset+index+2] = clr[i][2];
+      pixels[offset+index+3] = 255;
     }
+  }
 
-    print("ok");
+  print("ok");
+  updatePixels();
 
-   updatePixels();
+  saveCanvas(filename, "jpg");
 }
-
-// function draw() {
-//
-// }
